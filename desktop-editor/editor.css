@@ -1,0 +1,11 @@
+/* The desktop editor's styles: the package's, with the brand fonts from the bundle (next/font
+   isn't there to define their variables). */
+@import "../styles/globals.css";
+@source "../src/components/tool";
+@source "../src/components/ui";
+
+:root {
+  --font-brand-sans: "Geist Variable";
+  --font-brand-heading: "Shantell Sans Variable";
+  --font-brand-mono: "Geist Mono Variable";
+}

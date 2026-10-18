@@ -1,0 +1,55 @@
+name: Publish npm package
+
+# Publishes @isothrum/editor to npm with npm Trusted Publishing: the job authenticates over OIDC at
+# run time (no long-lived NODE_AUTH_TOKEN / _authToken is stored), and npm attaches a provenance
+# attestation automatically. Triggered by a release tag `vX.Y.Z` or run by hand from the Actions tab.
+#
+# Setup (done once by the maintainer, on npmjs.com): the package @isothrum/editor must already exist
+# on the registry — npm Trusted Publishers are configured per package, so a brand-new package name
+# cannot be created by trusted publishing and must be bootstrapped with one manual `npm publish`
+# first. Then, on the package's "Settings → Trusted Publisher" page, add a GitHub Actions publisher
+# pointing at repository `isoloom/isothrum-ui`, this workflow file (`publish-npm.yml`) and the
+# `npm-publish` environment. See PUBLISHING.md.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-24.04
+    environment: npm-publish
+    permissions:
+      # Required for npm Trusted Publishing (OIDC); no NODE_AUTH_TOKEN secret is used.
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      # registry-url points npm at the public registry; no token is written because trusted
+      # publishing authenticates over OIDC.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+
+      # Trusted publishing needs npm >= 11.5.1 (Node 24 already ships a newer npm; this is a guard).
+      - name: Ensure npm supports trusted publishing
+        run: |
+          npm install -g npm@latest
+          npm --version
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check (typecheck, tests, build)
+        run: npm run check
+
+      # prepack rebuilds dist/ so the published tarball is exactly what `check` validated. npm
+      # detects the OIDC trusted publisher and generates provenance automatically.
+      - name: Publish
+        run: npm publish --access public --provenance

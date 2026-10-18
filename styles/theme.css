@@ -1,0 +1,192 @@
+/*
+ * ─────────────────────────────────────────────────────────────────────────────
+ *  THEME — the one file to edit to rebrand the site.
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ *  Three layers, each built only from the one above it:
+ *
+ *   1. Palettes   --brand-*, --base-*   → point at a Tailwind color scale.
+ *   2. Semantic   --primary, --border…  → what components use (shadcn contract).
+ *   3. Utilities  bg-primary, text-muted-foreground…  (wired in globals.css).
+ *
+ *  Quick recipes
+ *   • New brand color:  replace `indigo` below with any Tailwind scale
+ *                       (violet, blue, emerald, rose, orange…).
+ *   • Warmer/cooler UI: replace `zinc` with neutral, slate, gray or stone.
+ *   • Rounder/sharper:  change --radius (0 = square, 1rem = pill-ish).
+ *   • Fonts:            lib/fonts.ts.
+ *   • Logo / favicon / OG colors: lib/brand.ts (mirror the hex values).
+ *
+ *  Components should only ever use semantic tokens (bg-primary, text-muted-
+ *  foreground, border…) or the brand scale (bg-brand-50) — never raw palette
+ *  classes like bg-indigo-600 — so a palette swap here restyles everything.
+ */
+
+:root {
+  /* 1. Palettes ------------------------------------------------------------ */
+  /* Excalidraw-style violet (500 is #6965db). */
+  --brand-50: #f3f2ff;
+  --brand-100: #e9e8ff;
+  --brand-200: #d4d2fc;
+  --brand-300: #b5b2f6;
+  --brand-400: #a8a5ff;
+  --brand-500: #6965db;
+  --brand-600: #5b57d1;
+  --brand-700: #4a47b1;
+  --brand-800: #3d3a91;
+  --brand-900: #2f2d70;
+  --brand-950: #1d1b45;
+
+  --base-50: var(--color-zinc-50);
+  --base-100: var(--color-zinc-100);
+  --base-200: var(--color-zinc-200);
+  --base-300: var(--color-zinc-300);
+  --base-400: var(--color-zinc-400);
+  --base-500: var(--color-zinc-500);
+  --base-600: var(--color-zinc-600);
+  --base-700: var(--color-zinc-700);
+  --base-800: var(--color-zinc-800);
+  --base-900: var(--color-zinc-900);
+  --base-950: var(--color-zinc-950);
+
+  /* Shape, layout & type */
+  /* Soft corners: clear, a little playful. */
+  --radius: 0.75rem;
+  /* Max width of `.container` (header, pages, footer). */
+  --content-width: 72rem;
+  /* Geist needs no character variants. */
+  --font-features: normal;
+
+  /* 2. Semantic tokens — light --------------------------------------------- */
+  --background: var(--color-white);
+  --foreground: var(--base-950);
+  /* Subtle alternate section background (feature bands, footers). */
+  /* Barely-there gray for bands and the editor's chrome, as on vercel.com. */
+  --surface: oklch(0.985 0 0);
+
+  --card: var(--color-white);
+  --card-foreground: var(--base-950);
+  --popover: var(--color-white);
+  --popover-foreground: var(--base-950);
+
+  /* Isothrum's identity: a white whiteboard, ink lines, soft violet for what you act on
+     and what is selected. 600 keeps white button text above 4.5:1. */
+  --primary: var(--brand-600);
+  --primary-foreground: var(--color-white);
+  --signal: var(--brand-500);
+  --signal-foreground: var(--brand-700);
+  /* Pastel fills for devices, as on a whiteboard. */
+  --pastel-blue: #e7f5ff;
+  --pastel-green: #ebfbee;
+  --pastel-yellow: #fff9db;
+  --pastel-violet: #f3f0ff;
+  --pastel-red: #fff0f0;
+  --secondary: var(--base-100);
+  --secondary-foreground: var(--base-900);
+  --muted: var(--base-100);
+  --muted-foreground: oklch(0.52 0 0);
+  --accent: var(--base-100);
+  --accent-foreground: var(--base-900);
+
+  /* Inline text links (prose, "link" buttons). */
+  --link: var(--brand-700);
+
+  --destructive: var(--color-red-600);
+  --success: var(--color-emerald-700);
+  --warning: var(--color-amber-500);
+  --info: var(--color-sky-600);
+
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.9 0 0);
+  --ring: var(--brand-500);
+
+  --chart-1: var(--brand-500);
+  --chart-2: var(--color-sky-500);
+  --chart-3: var(--color-emerald-500);
+  --chart-4: var(--color-amber-500);
+  --chart-5: var(--color-rose-500);
+
+  --sidebar: var(--base-50);
+  --sidebar-foreground: var(--base-950);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--base-100);
+  --sidebar-accent-foreground: var(--base-900);
+  --sidebar-border: var(--base-200);
+  --sidebar-ring: var(--ring);
+}
+
+/* 2b. Semantic tokens — dark ---------------------------------------------- */
+.dark {
+  /* Near-black with barely-raised surfaces, as on a lit rack at night. */
+  --background: oklch(0.145 0.003 286);
+  --foreground: var(--base-50);
+  --surface: oklch(0.17 0.003 286);
+
+  --card: oklch(0.185 0.004 286);
+  --card-foreground: var(--base-50);
+  --popover: oklch(0.2 0.004 286);
+  --popover-foreground: var(--base-50);
+
+  --primary: var(--brand-400);
+  --primary-foreground: var(--base-950);
+  --signal: var(--brand-400);
+  --signal-foreground: var(--brand-400);
+  --pastel-blue: oklch(0.3 0.04 240);
+  --pastel-green: oklch(0.3 0.04 150);
+  --pastel-yellow: oklch(0.32 0.04 95);
+  --pastel-violet: oklch(0.3 0.05 285);
+  --pastel-red: oklch(0.3 0.04 20);
+  --secondary: var(--base-800);
+  --secondary-foreground: var(--base-50);
+  --muted: var(--base-800);
+  --muted-foreground: var(--base-400);
+  --accent: var(--base-800);
+  --accent-foreground: var(--base-50);
+
+  --link: var(--brand-400);
+
+  --destructive: var(--color-red-500);
+  --success: var(--color-emerald-400);
+  --warning: var(--color-amber-400);
+  --info: var(--color-sky-400);
+
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: var(--brand-400);
+
+  --sidebar: var(--base-900);
+  --sidebar-foreground: var(--base-50);
+  --sidebar-accent: var(--base-800);
+  --sidebar-accent-foreground: var(--base-50);
+  --sidebar-border: oklch(1 0 0 / 10%);
+}
+
+/* The editor's business design: the canvas in the plain sans, with quiet fills, for a diagram
+   that goes into a report (the sketch design is the default above). */
+[data-design="business"] {
+  --font-brand-heading: var(--font-brand-sans);
+  /* Resolved at the root from the brand's heading font: said again here, for business. */
+  --font-heading: var(--font-sans);
+  --pastel-blue: oklch(0.975 0.006 250);
+  --pastel-green: oklch(0.975 0.006 160);
+  --pastel-yellow: oklch(0.98 0.008 95);
+  --pastel-violet: oklch(0.975 0.006 285);
+  --pastel-red: oklch(0.975 0.006 20);
+}
+.dark [data-design="business"] {
+  --pastel-blue: oklch(0.23 0.012 250);
+  --pastel-green: oklch(0.23 0.012 160);
+  --pastel-yellow: oklch(0.24 0.012 95);
+  --pastel-violet: oklch(0.23 0.012 285);
+  --pastel-red: oklch(0.23 0.012 20);
+}
+
+/* Business: connection points show on the device under the pointer (or selected) only, as in a
+   network diagram tool. */
+[data-design="business"] .react-flow__node:not(:hover):not(.selected) .react-flow__handle {
+  opacity: 0;
+}
+[data-design="business"] .react-flow__handle {
+  transition: opacity 120ms;
+}
